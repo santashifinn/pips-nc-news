@@ -7,6 +7,7 @@ const {
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
+const jestsorted = require("jest-sorted");
 
 const app = require("../app");
 

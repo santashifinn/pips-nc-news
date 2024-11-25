@@ -1,7 +1,10 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
-
+**Files to be added**
+Please create the following files in order to connect to the **test-data** and **development-data** databases locally:
+* .env.test
+* .env.development
+Please add "PGDATABASE=" and the relevant database name to each file.
 
 
 --- 

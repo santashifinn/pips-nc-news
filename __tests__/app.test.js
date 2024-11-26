@@ -170,7 +170,53 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe("general error tests", () => {
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: Inserts a new comment", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "I want to add something to this discussion.",
+    };
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.body).toBe("I want to add something to this discussion.");
+        expect(body.comment_id).toBe(19);
+        expect(body.article_id).toBe(4);
+        expect(body.author).toBe("icellusedkars");
+        expect(body.votes).toBe(0);
+        expect(typeof body.created_at).toBe("string");
+      });
+  });
+  test("400: Responds with an error message when given an invalid article id", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "I want to add something to this discussion.",
+    };
+    return request(app)
+      .post("/api/articles/12345678/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error message when given incomplete required data, ex. missing body", () => {
+    const newComment = {
+      username: "icellusedkars",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("General error tests", () => {
   test("404: Responds with error message when given an invalid endpoint", () => {
     return request(app)
       .get("/api/oh-noes")

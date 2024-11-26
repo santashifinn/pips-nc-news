@@ -216,6 +216,39 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: Responds with the updated article object", () => {
+    const newVote = { inc_votes: -13 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body[0].votes).toBe(87);
+      });
+  });
+  test("404: Responds with an error message when given a valid but non-existent id", () => {
+    const newVote = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/articles/133463")
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+  test("400: Responds with an error message when given an invalid article id", () => {
+    const newVote = { inc_votes: 33 };
+    return request(app)
+      .patch("/api/articles/downvote-4-the-win")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
 describe("General error tests", () => {
   test("404: Responds with error message when given an invalid endpoint", () => {
     return request(app)

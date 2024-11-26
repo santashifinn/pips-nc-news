@@ -1,6 +1,7 @@
 const {
   selectArticles,
   selectArticleById,
+  changeVotes,
   checkArticleExists,
 } = require("../models/articles.model");
 
@@ -17,6 +18,30 @@ exports.getArticleById = (req, res, next) => {
   selectArticleById(article_id)
     .then((article) => {
       return res.status(200).send({ article });
+    })
+    .catch(next);
+};
+
+// exports.updateVotes = (req, res, next) => {
+//   const newVotes = req.body;
+//   const article_id = req.params.article_id;
+//   changeVotes(newVotes, article_id)
+//     .then((article) => {
+//       return res.status(200).send(article);
+//     })
+//     .catch(next);
+// };
+
+exports.updateVotes = (req, res, next) => {
+  const newVotes = req.body;
+  const article_id = req.params.article_id;
+  const promises = [changeVotes(newVotes, article_id)];
+  if (article_id) {
+    promises.push(checkArticleExists(article_id));
+  }
+  Promise.all(promises)
+    .then((article) => {
+      return res.status(200).send(article);
     })
     .catch(next);
 };

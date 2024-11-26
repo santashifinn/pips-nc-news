@@ -57,5 +57,24 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts a comment on an article specified by article_id",
+    "exampleInput": {
+      "comment": {
+        "username": "weegembump",
+        "body": "I want to add something to this discussion."
+      }
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 15,
+        "body": "I want to add something to this discussion.",
+        "article_id": 3,
+        "author": "weegembump",
+        "votes": 0,
+        "created_at": "2018-05-30T15:59:13.341Z"
+      }
+    }
   }
 }

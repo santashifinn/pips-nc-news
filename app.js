@@ -6,8 +6,11 @@ const { getTopics } = require("./controllers/topics.controller");
 const {
   getArticles,
   getArticleById,
-  getCommentsByArticle,
 } = require("./controllers/articles.controller");
+const {
+  getCommentsByArticle,
+  postComment,
+} = require("./controllers/comments.controller");
 
 app.use(express.json());
 
@@ -17,14 +20,16 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:articles_id", getArticleById);
+
 app.get("/api/articles/:articles_id/comments", getCommentsByArticle);
+app.post("/api/articles/:article_id/comments", postComment);
 
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Not found" });
 });
 
 app.use((err, req, res, next) => {
-  if (err.code === "22P02") {
+  if (err.code === "22P02" || err.code === "23502" || err.code === "23503") {
     res.status(400).send({ msg: "Bad request" });
   } else {
     next(err);

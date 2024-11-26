@@ -62,6 +62,20 @@ describe("GET /api/articles", () => {
         });
       });
   });
+  test("200: Responds with an array in descending order of date created", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect([
+          { created_at: "2020-11-03T09:12:00.000Z" },
+          { created_at: "2020-10-16T05:03:00.000Z" },
+          { created_at: "2020-10-11T11:24:00.000Z" },
+        ]).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
 });
 
 describe("GET /api/articles/:article_id", () => {
@@ -93,6 +107,62 @@ describe("GET /api/articles/:article_id", () => {
   test("400: Responds with an error message when given an invalid article id", () => {
     return request(app)
       .get("/api/articles/did-u-hear")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: Responds with an array of comments for the given article_id", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments[0].length).toBe(2);
+        comments[0].forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(comment.article_id).toBe(3);
+        });
+      });
+  });
+  test("200: Responds with an empty array when the article_id exists but has no comments", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments[0].length).toBe(0);
+      });
+  });
+  test("200: Responds with an array in descending order of date created", () => {
+    return request(app)
+      .get("/api/articles/5/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect([
+          { created_at: "2020-11-24T00:08:00.000Z" },
+          { created_at: "2020-06-09T05:00:00.000Z" },
+        ]).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  test("404: Responds with an error message when given a valid but non-existent id", () => {
+    return request(app)
+      .get("/api/articles/987654/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+  test("400: Responds with an error message when given an invalid article id", () => {
+    return request(app)
+      .get("/api/articles/wot-is-this/comments")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");

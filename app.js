@@ -6,6 +6,7 @@ const { getTopics } = require("./controllers/topics.controller");
 const {
   getArticles,
   getArticleById,
+  getCommentsByArticle,
 } = require("./controllers/articles.controller");
 
 app.use(express.json());
@@ -16,6 +17,7 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:articles_id", getArticleById);
+app.get("/api/articles/:articles_id/comments", getCommentsByArticle);
 
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Not found" });

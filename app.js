@@ -6,6 +6,7 @@ const { getTopics } = require("./controllers/topics.controller");
 const {
   getArticles,
   getArticleById,
+  updateVotes,
 } = require("./controllers/articles.controller");
 const {
   getCommentsByArticle,
@@ -24,6 +25,8 @@ app.get("/api/articles/:articles_id", getArticleById);
 app.get("/api/articles/:articles_id/comments", getCommentsByArticle);
 app.post("/api/articles/:article_id/comments", postComment);
 
+app.patch("/api/articles/:article_id", updateVotes);
+
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Not found" });
 });
@@ -40,6 +43,7 @@ app.use((err, req, res, next) => {
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else {
+    console.log(err);
     next(err);
   }
 });

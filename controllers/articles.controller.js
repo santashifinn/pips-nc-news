@@ -4,12 +4,18 @@ const {
   changeVotes,
   checkArticleExists,
 } = require("../models/articles.model");
+const { checkTopicExists } = require("../models/topics.model");
 
 exports.getArticles = (req, res, next) => {
   const sort_by = req.query.sort_by;
   const order = req.query.order;
-  selectArticles(sort_by, order)
-    .then((articles) => {
+  const topic = req.query.topic;
+  const promises = [selectArticles(topic, sort_by, order)];
+  if (topic) {
+    promises.push(checkTopicExists(topic));
+  }
+  Promise.all(promises)
+    .then(([articles]) => {
       return res.status(200).send({ articles });
     })
     .catch(next);
@@ -33,7 +39,7 @@ exports.updateVotes = (req, res, next) => {
   }
   Promise.all(promises)
     .then(([article]) => {
-      return res.status(200).send({article});
+      return res.status(200).send({ article });
     })
     .catch(next);
 };

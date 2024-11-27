@@ -11,6 +11,7 @@ Please create the following files in order to connect to the **test-data** and *
 
 - .env.test [Please add the text "*PGDATABASE=nc_news_test*" to the file.]
 - .env.development [Please add the text "*PGDATABASE=nc_news*" to the file.]
+- .env.production [Please add the text "*DATABASE_URL=postgresql://postgres.oynyhjsxwofzftyiyfhl:KTSaKOyfDdaQ8oAR@aws-0-eu-west-2.pooler.supabase.com:6543/postgres*" to the file.]
 
 **How to seed local database**
 
@@ -26,11 +27,11 @@ Please enter the request "_GET /api_" to see a list of all available endpoints.
 
 **Queries**
 To write a query, add the available query options listed for that request in "_GET /api_",
-eg. "_/api/articles?topic=cats&sort_by=author&order=desc_" would return a list of articles with the topic cats sorted in descending order of author.
+eg. "*/api/articles?topic=cats&sort_by=author&order=desc*" would return a list of articles with the topic cats sorted in descending order of author.
 
 The default sort orders are as follows:
 
-- articles: descending order of date created
+- _articles_: descending order of date created
 
 ---
 

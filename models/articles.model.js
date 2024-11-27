@@ -1,18 +1,32 @@
 const db = require("../db/connection");
 
-exports.selectArticles = () => {
-  return db
-    .query(
-      `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id) AS comment_count
+exports.selectArticles = (sort_by = "created_at", order = "DESC") => {
+  const validSortBy = [
+    "author",
+    "title",
+    "article_id",
+    "topic",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  if (!validSortBy.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  let sqlQuery = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id) AS comment_count
       FROM articles
       LEFT JOIN comments
       ON articles.article_id = comments.article_id
-      GROUP BY articles.article_id
-      ORDER BY created_at DESC;`
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+      GROUP BY articles.article_id `;
+  if (sort_by) {
+    sqlQuery += `ORDER BY ${sort_by} `;
+  }
+  if (order) {
+    sqlQuery += `${order} `;
+  }
+  return db.query(sqlQuery).then(({ rows }) => {
+    return rows;
+  });
 };
 
 exports.selectArticleById = (article_id) => {

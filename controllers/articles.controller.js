@@ -6,7 +6,9 @@ const {
 } = require("../models/articles.model");
 
 exports.getArticles = (req, res, next) => {
-  selectArticles()
+  const sort_by = req.query.sort_by;
+  const order = req.query.order;
+  selectArticles(sort_by, order)
     .then((articles) => {
       return res.status(200).send({ articles });
     })
@@ -31,7 +33,7 @@ exports.updateVotes = (req, res, next) => {
   }
   Promise.all(promises)
     .then(([article]) => {
-      return res.status(200).send(article);
+      return res.status(200).send({article});
     })
     .catch(next);
 };

@@ -1,12 +1,29 @@
 # Northcoders News API
 
+**Project summary**
+
+An API built for the purpose of accessing application data programmatically, mimicking the building of a real world backend service (eg. Reddit) and providing this information to the front end architecture.
+
+**Hosted version**
+_https://pips-nc-news.onrender.com_
+
+**GitHub repository**
+_https://github.com/santashifinn/pips-nc-news_
+
+**How to clone project**
+- Clone this repository to your local machine using the command "_git clone https://github.com/santashifinn/pips-nc-news_".
+- Navigate into the folder using the command "_cd pips-nc-news_".
+- Install the required dependencies using the commands below.
+- Ensure to add the required files listed below.
+
 **Required dependencies - minimum versions required to run project**
 
-- Node.js - 2.2.0
-- Postgres - 8.7.3
-- DotEnv - 16.0.0
+- Node.js - 2.2.0 [Please install using the command "_npm install_"]
+- Postgres - 8.7.3 [Please install using the command "_npm install pg_"]
+- DotEnv - 16.0.0 [Please install using the command "_npm install dotenv_"]
+- Express - 4.21.1 [Please install using the command "_npm install express_"]
 
-**Files to be added**
+**Required files to be added**
 Please create the following files in order to connect to the **test-data** and **development-data** databases locally:
 
 - .env.test [Please add the text "*PGDATABASE=nc_news_test*" to the file.]

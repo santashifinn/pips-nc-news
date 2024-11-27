@@ -218,8 +218,8 @@ describe("PATCH /api/articles/:article_id", () => {
       .patch("/api/articles/1")
       .send(newVote)
       .expect(200)
-      .then(({ body: { votes } }) => {
-        expect(votes).toBe(87);
+      .then(({ body: { article } }) => {
+        expect(article.votes).toBe(87);
       });
   });
   test("404: Responds with an error message when given a valid but non-existent id", () => {
@@ -242,6 +242,7 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
+  //more error tests on newVote object that is being sent? If an empty object or the wrong data type or missing keys
 });
 
 describe("DELETE /api/comments/:comment_id", () => {
@@ -278,6 +279,96 @@ describe("GET /api/users", () => {
           expect(typeof user.name).toBe("string");
           expect(typeof user.avatar_url).toBe("string");
         });
+      });
+  });
+});
+
+describe("GET /api/articles?sort_by=:column&order=:order / Responds with an array in specified order of specified column", () => {
+  test("200: Responds with an ascending array of articles by title", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order=asc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("title", {
+          descending: false,
+        });
+      });
+  });
+  test("200: Responds with a descending array of articles by topic", () => {
+    return request(app)
+      .get("/api/articles?sort_by=topic&order=desc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("topic", {
+          descending: true,
+        });
+      });
+  });
+  test("200: Responds with an ascending array of articles by author", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order=asc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("author", {
+          descending: false,
+        });
+      });
+  });
+  test("200: Responds with a descending array of articles by created_at", () => {
+    return request(app)
+      .get("/api/articles?sort_by=created_at&order=desc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  test("200: Responds with an ascending array of articles by article_id", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order=asc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("author", {
+          descending: false,
+        });
+      });
+  });
+  test("200: Responds with a descending array of articles by votes", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&order=desc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("votes", {
+          descending: true,
+        });
+      });
+  });
+  test("200: Responds with an ascending array of articles by comment_count", () => {
+    return request(app)
+      .get("/api/articles?sort_by=comment_count&order=asc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("comment_count", {
+          descending: false,
+          coerce: true,
+        });
+      });
+  });
+  test("400: Responds with an error message when given an invalid sort query", () => {
+    return request(app)
+      .get("/api/articles?sort_by=christmas&order=asc")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error message when given an invalid order type", () => {
+    return request(app)
+      .get("/api/articles?sort_by=topic&order=xyz")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
       });
   });
 });

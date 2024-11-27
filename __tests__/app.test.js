@@ -326,10 +326,10 @@ describe("GET /api/articles?sort_by=:column&order=:order / Responds with an arra
   });
   test("200: Responds with an ascending array of articles by article_id", () => {
     return request(app)
-      .get("/api/articles?sort_by=author&order=asc")
+      .get("/api/articles?sort_by=article_id&order=asc")
       .expect(200)
       .then(({ body: { articles } }) => {
-        expect(articles).toBeSortedBy("author", {
+        expect(articles).toBeSortedBy("article_id", {
           descending: false,
         });
       });
@@ -369,6 +369,42 @@ describe("GET /api/articles?sort_by=:column&order=:order / Responds with an arra
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("GET /api/articles?topic=:topic / Responds with an array of articles filtered by topic", () => {
+  test("200: Responds with an array of articles filtered by cats topic", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(1);
+        articles.forEach((article) => {
+          expect(article.topic).toBe("cats");
+        });
+      });
+  });
+  test("200: Responds with an array of articles filtered by mitch topic AND in descending order by article_id", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch&sort_by=article_id&order=desc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(12);
+        expect(articles).toBeSortedBy("article_id", {
+          descending: true,
+        });
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  test("404: Responds with an error message when given a valid but non-existent topic query", () => {
+    return request(app)
+      .get("/api/articles?topic=idontexistatall")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
       });
   });
 });

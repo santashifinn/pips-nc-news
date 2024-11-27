@@ -67,11 +67,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body: { articles } }) => {
-        expect([
-          { created_at: "2020-11-03T09:12:00.000Z" },
-          { created_at: "2020-10-16T05:03:00.000Z" },
-          { created_at: "2020-10-11T11:24:00.000Z" },
-        ]).toBeSortedBy("created_at", {
+        expect(articles).toBeSortedBy("created_at", {
           descending: true,
         });
       });
@@ -83,15 +79,15 @@ describe("GET /api/articles/:article_id", () => {
     return request(app)
       .get("/api/articles/1")
       .expect(200)
-      .then(({ body }) => {
-        expect(body.article.author).toBe("butter_bridge");
-        expect(body.article.title).toBe("Living in the shadow of a great man");
-        expect(body.article.article_id).toBe(1);
-        expect(body.article.body).toBe("I find this existence challenging");
-        expect(body.article.topic).toBe("mitch");
-        expect(body.article.created_at).toBe("2020-07-09T20:11:00.000Z");
-        expect(body.article.votes).toBe(100);
-        expect(body.article.article_img_url).toBe(
+      .then(({ body: { article } }) => {
+        expect(article.author).toBe("butter_bridge");
+        expect(article.title).toBe("Living in the shadow of a great man");
+        expect(article.article_id).toBe(1);
+        expect(article.body).toBe("I find this existence challenging");
+        expect(article.topic).toBe("mitch");
+        expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
+        expect(article.votes).toBe(100);
+        expect(article.article_img_url).toBe(
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         );
       });
@@ -120,8 +116,8 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/3/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
-        expect(comments[0].length).toBe(2);
-        comments[0].forEach((comment) => {
+        expect(comments.length).toBe(2);
+        comments.forEach((comment) => {
           expect(typeof comment.comment_id).toBe("number");
           expect(typeof comment.votes).toBe("number");
           expect(typeof comment.created_at).toBe("string");
@@ -136,7 +132,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/2/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
-        expect(comments[0].length).toBe(0);
+        expect(comments.length).toBe(0);
       });
   });
   test("200: Responds with an array in descending order of date created", () => {
@@ -144,10 +140,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/5/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
-        expect([
-          { created_at: "2020-11-24T00:08:00.000Z" },
-          { created_at: "2020-06-09T05:00:00.000Z" },
-        ]).toBeSortedBy("created_at", {
+        expect(comments).toBeSortedBy("created_at", {
           descending: true,
         });
       });
@@ -180,13 +173,15 @@ describe("POST /api/articles/:article_id/comments", () => {
       .post("/api/articles/4/comments")
       .send(newComment)
       .expect(201)
-      .then(({ body }) => {
-        expect(body.body).toBe("I want to add something to this discussion.");
-        expect(body.comment_id).toBe(19);
-        expect(body.article_id).toBe(4);
-        expect(body.author).toBe("icellusedkars");
-        expect(body.votes).toBe(0);
-        expect(typeof body.created_at).toBe("string");
+      .then(({ body: { comment } }) => {
+        expect(comment.body).toBe(
+          "I want to add something to this discussion."
+        );
+        expect(comment.comment_id).toBe(19);
+        expect(comment.article_id).toBe(4);
+        expect(comment.author).toBe("icellusedkars");
+        expect(comment.votes).toBe(0);
+        expect(typeof comment.created_at).toBe("string");
       });
   });
   test("400: Responds with an error message when given an invalid article id", () => {
@@ -223,8 +218,8 @@ describe("PATCH /api/articles/:article_id", () => {
       .patch("/api/articles/1")
       .send(newVote)
       .expect(200)
-      .then(({ body }) => {
-        expect(body[0].votes).toBe(87);
+      .then(({ body: { votes } }) => {
+        expect(votes).toBe(87);
       });
   });
   test("404: Responds with an error message when given a valid but non-existent id", () => {
@@ -242,6 +237,28 @@ describe("PATCH /api/articles/:article_id", () => {
     return request(app)
       .patch("/api/articles/downvote-4-the-win")
       .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: Deletes the comment with the given comment_id", () => {
+    return request(app).delete("/api/comments/2").expect(204);
+  });
+  test("404: Responds with an error message when given a valid but non-existent id", () => {
+    return request(app)
+      .delete("/api/comments/98099")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+  test("400: Responds with an error message when given an invalid comment id", () => {
+    return request(app)
+      .delete("/api/comments/im-not-an-id")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");

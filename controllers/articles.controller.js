@@ -22,16 +22,6 @@ exports.getArticleById = (req, res, next) => {
     .catch(next);
 };
 
-// exports.updateVotes = (req, res, next) => {
-//   const newVotes = req.body;
-//   const article_id = req.params.article_id;
-//   changeVotes(newVotes, article_id)
-//     .then((article) => {
-//       return res.status(200).send(article);
-//     })
-//     .catch(next);
-// };
-
 exports.updateVotes = (req, res, next) => {
   const newVotes = req.body;
   const article_id = req.params.article_id;
@@ -40,7 +30,7 @@ exports.updateVotes = (req, res, next) => {
     promises.push(checkArticleExists(article_id));
   }
   Promise.all(promises)
-    .then((article) => {
+    .then(([article]) => {
       return res.status(200).send(article);
     })
     .catch(next);

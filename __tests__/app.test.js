@@ -90,7 +90,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(article.article_img_url).toBe(
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         );
-        expect(article.comment_count).toBe("11");
+        expect(article.comment_count).toBe(11);
       });
   });
   test("404: Responds with an error message when given a valid but non-existent id", () => {
@@ -465,6 +465,52 @@ describe("PATCH /api/comments/:comment_id", () => {
       });
   });
   //more error tests on newVote object that is being sent? If an empty object or the wrong data type or missing keys
+});
+
+describe("POST /api/articles", () => {
+  test("201: Adds a new article", () => {
+    const newArticle = {
+      author: "lurker",
+      title: "I want to hug cats",
+      body: "Lots of reasons...",
+      topic: "cats",
+      article_img_url:
+        "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(201)
+      .then(({ body: { article } }) => {
+        expect(typeof article.article_id).toBe("number");
+        expect(article.author).toBe("lurker");
+        expect(article.title).toBe("I want to hug cats");
+        expect(article.body).toBe("Lots of reasons...");
+        expect(article.topic).toBe("cats");
+        expect(article.article_img_url).toBe(
+          "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700"
+        );
+        expect(article.votes).toBe(0);
+        expect(article.comment_count).toBe(0);
+        expect(typeof article.created_at).toBe("string");
+      });
+  });
+  test("400: Responds with an error message when given incomplete required data, ex. missing title", () => {
+    const newArticle = {
+      author: "lurker",
+      body: "Lots of reasons...",
+      topic: "cats",
+      article_img_url:
+        "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
 });
 
 describe("General error tests", () => {

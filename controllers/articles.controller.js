@@ -50,7 +50,6 @@ exports.postArticle = (req, res, next) => {
   addArticle(newArticle)
     .then((article_id) => {
       return selectArticleById(article_id).then((article) => {
-        console.log(article);
         res.status(201).send({ article });
       });
     })

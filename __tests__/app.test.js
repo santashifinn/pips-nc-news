@@ -513,6 +513,35 @@ describe("POST /api/articles", () => {
   });
 });
 
+describe("POST /api/topics", () => {
+  test("201: Adds a new topic", () => {
+    const newTopic = {
+      slug: "coding",
+      description: "let us commence the code",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(201)
+      .then(({ body: { topic } }) => {
+        expect(topic.slug).toBe("coding");
+        expect(topic.description).toBe("let us commence the code");
+      });
+  });
+  test("400: Responds with an error message when given incomplete required data, ex. missing slug", () => {
+    const newTopic = {
+      description: "let us commence the code",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+});
+
 describe("General error tests", () => {
   test("404: Responds with error message when given an invalid endpoint", () => {
     return request(app)

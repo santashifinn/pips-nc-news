@@ -542,6 +542,28 @@ describe("POST /api/topics", () => {
   });
 });
 
+describe("DELETE /api/articles/:article_id", () => {
+  test("204: Deletes the article with the given comment_id", () => {
+    return request(app).delete("/api/articles/2").expect(204);
+  });
+  test("404: Responds with an error message when given a valid but non-existent article id", () => {
+    return request(app)
+      .delete("/api/articles/98099")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+  test("400: Responds with an error message when given an invalid article id", () => {
+    return request(app)
+      .delete("/api/articles/not-an-id-at-all")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
 describe("General error tests", () => {
   test("404: Responds with error message when given an invalid endpoint", () => {
     return request(app)

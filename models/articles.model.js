@@ -95,6 +95,14 @@ exports.addArticle = (newArticle) => {
     });
 };
 
+exports.removeArticle = (article_id) => {
+  return db.query(
+    `DELETE FROM articles
+      WHERE article_id = $1`,
+    [article_id]
+  );
+};
+
 exports.checkArticleExists = (article_id) => {
   return db
     .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])

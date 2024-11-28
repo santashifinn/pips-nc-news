@@ -4,6 +4,7 @@ const {
   changeVotes,
   checkArticleExists,
   addArticle,
+  removeArticle,
 } = require("../models/articles.model");
 const { checkTopicExists } = require("../models/topics.model");
 
@@ -52,6 +53,20 @@ exports.postArticle = (req, res, next) => {
       return selectArticleById(article_id).then((article) => {
         res.status(201).send({ article });
       });
+    })
+    .catch(next);
+};
+
+exports.deleteArticle = (req, res, next) => {
+  const { article_id } = req.params;
+  const promises = [];
+  if (article_id) {
+    promises.push(checkArticleExists(article_id));
+    promises.push(removeArticle(article_id));
+  }
+  Promise.all(promises)
+    .then(() => {
+      res.status(204).send();
     })
     .catch(next);
 };

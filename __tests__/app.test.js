@@ -410,6 +410,29 @@ describe("GET /api/articles?topic=:topic / Responds with an array of articles fi
   });
 });
 
+describe("GET /api/users/:username", () => {
+  test("200: Responds with the requested user object", () => {
+    return request(app)
+      .get("/api/users/lurker")
+      .expect(200)
+      .then(({ body: { user } }) => {
+        expect(user.username).toBe("lurker");
+        expect(user.name).toBe("do_nothing");
+        expect(user.avatar_url).toBe(
+          "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+        );
+      });
+  });
+  test("404: Responds with an error message when given a non-existent username", () => {
+    return request(app)
+      .get("/api/users/billandbentheflowerpotmen")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+});
+
 describe("General error tests", () => {
   test("404: Responds with error message when given an invalid endpoint", () => {
     return request(app)

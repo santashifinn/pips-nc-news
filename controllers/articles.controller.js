@@ -3,6 +3,7 @@ const {
   selectArticleById,
   changeVotes,
   checkArticleExists,
+  addArticle,
 } = require("../models/articles.model");
 const { checkTopicExists } = require("../models/topics.model");
 
@@ -40,6 +41,18 @@ exports.updateVotes = (req, res, next) => {
   Promise.all(promises)
     .then(([article]) => {
       return res.status(200).send({ article });
+    })
+    .catch(next);
+};
+
+exports.postArticle = (req, res, next) => {
+  const newArticle = req.body;
+  addArticle(newArticle)
+    .then((article_id) => {
+      return selectArticleById(article_id).then((article) => {
+        console.log(article);
+        res.status(201).send({ article });
+      });
     })
     .catch(next);
 };

@@ -39,7 +39,7 @@ exports.selectArticles = (topic, sort_by = "created_at", order = "DESC") => {
 exports.selectArticleById = (article_id) => {
   return db
     .query(
-      `SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id) AS comment_count
+      `SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id)::INT AS comment_count
       FROM articles
       LEFT JOIN comments
       ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id;`,
@@ -74,6 +74,24 @@ exports.changeVotes = (newVotes, article_id) => {
         });
       }
       return rows[0];
+    });
+};
+
+exports.addArticle = (newArticle) => {
+  const { author, title, body, topic, article_img_url } = newArticle;
+  if (!article_img_url) {
+    article_img_url =
+      "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700";
+  }
+  return db
+    .query(
+      `INSERT INTO articles (author, title, body, topic, article_img_url)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *;`,
+      [author, title, body, topic, article_img_url]
+    )
+    .then(({ rows: [{ article_id }] }) => {
+      return article_id;
     });
 };
 

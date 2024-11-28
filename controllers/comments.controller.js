@@ -3,6 +3,7 @@ const {
   insertComment,
   checkCommentExists,
   removeComment,
+  changeCommentVotes,
 } = require("../models/comments.model");
 const { checkArticleExists } = require("../models/articles.model");
 
@@ -24,7 +25,7 @@ exports.postComment = (req, res, next) => {
   const article_id = req.params.article_id;
   insertComment(newComment, article_id)
     .then((comment) => {
-      res.status(201).send({comment});
+      res.status(201).send({ comment });
     })
     .catch(next);
 };
@@ -33,12 +34,26 @@ exports.deleteComment = (req, res, next) => {
   const { comment_id } = req.params;
   const promises = [];
   if (comment_id) {
-    promises.push(checkCommentExists(comment_id))
+    promises.push(checkCommentExists(comment_id));
     promises.push(removeComment(comment_id));
   }
   Promise.all(promises)
-  .then(() => {
-    res.status(204).send();
-  })
-  .catch(next);
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch(next);
+};
+
+exports.updateCommentVotes = (req, res, next) => {
+  const newVotes = req.body;
+  const comment_id = req.params.comment_id;
+  const promises = [changeCommentVotes(newVotes, comment_id)];
+  if (comment_id) {
+    promises.push(checkCommentExists(comment_id));
+  }
+  Promise.all(promises)
+    .then(([comment]) => {
+      return res.status(200).send({ comment });
+    })
+    .catch(next);
 };

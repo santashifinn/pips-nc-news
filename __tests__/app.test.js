@@ -433,6 +433,40 @@ describe("GET /api/users/:username", () => {
   });
 });
 
+describe("PATCH /api/comments/:comment_id", () => {
+  test("200: Responds with the updated comment object", () => {
+    const newVote = { inc_votes: 42 };
+    return request(app)
+      .patch("/api/comments/2")
+      .send(newVote)
+      .expect(200)
+      .then(({ body: { comment } }) => {
+        expect(comment.votes).toBe(56);
+      });
+  });
+  test("404: Responds with an error message when given a valid but non-existent id", () => {
+    const newVote = { inc_votes: 6 };
+    return request(app)
+      .patch("/api/comments/198202")
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+  test("400: Responds with an error message when given an invalid comment id", () => {
+    const newVote = { inc_votes: 12 };
+    return request(app)
+      .patch("/api/comments/itsacommentfest")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  //more error tests on newVote object that is being sent? If an empty object or the wrong data type or missing keys
+});
+
 describe("General error tests", () => {
   test("404: Responds with error message when given an invalid endpoint", () => {
     return request(app)

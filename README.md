@@ -1,49 +1,49 @@
-# Northcoders News API
+![Image of a Pipistrelle bat with red fur introducing the news](http://pipmurphy.com/nc-news-header.png)
 
-**Project summary**
+# Project summary
 
 An API built for the purpose of accessing application data programmatically, mimicking the building of a real world backend service (eg. Reddit) and providing this information to the front end architecture.
 
-**Hosted version**
-_https://pips-nc-news.onrender.com_
+### Hosted version
+You can access the hosted version [here](https://pips-nc-news.onrender.com).
 
-**GitHub repository**
-_https://github.com/santashifinn/pips-nc-news_
+### GitHub repository
+You can access the hosted version [here](https://github.com/santashifinn/pips-nc-news).
 
-**How to clone project**
-- Clone this repository to your local machine using the command "_git clone https://github.com/santashifinn/pips-nc-news_".
-- Navigate into the folder using the command "_cd pips-nc-news_".
+# How to clone project
+- Clone this repository to your local machine using the command `git clone https://github.com/santashifinn/pips-nc-news`.
+- Navigate into the folder using the command `cd pips-nc-news`.
 - Install the required dependencies using the commands below.
 - Ensure to add the required files listed below.
 
-**Required dependencies - minimum versions required to run project**
+# Required dependencies - minimum versions required to run project
 
-- Node.js - 2.2.0 [Please install using the command "_npm install_"]
-- Postgres - 8.7.3 [Please install using the command "_npm install pg_"]
-- DotEnv - 16.0.0 [Please install using the command "_npm install dotenv_"]
-- Express - 4.21.1 [Please install using the command "_npm install express_"]
+- Node.js - 2.2.0 [Please install using the command `npm install`]
+- Postgres - 8.7.3 [Please install using the command `npm install pg`]
+- DotEnv - 16.0.0 [Please install using the command `npm install dotenv`]
+- Express - 4.21.1 [Please install using the command `npm install express`]
 
-**Required files to be added**
+# Required files to be added
 Please create the following files in order to connect to the **test-data** and **development-data** databases locally:
 
 - .env.test [Please add the text "*PGDATABASE=nc_news_test*" to the file.]
 - .env.development [Please add the text "*PGDATABASE=nc_news*" to the file.]
 - .env.production [Please add the text "*DATABASE_URL=postgresql://postgres.oynyhjsxwofzftyiyfhl:KTSaKOyfDdaQ8oAR@aws-0-eu-west-2.pooler.supabase.com:6543/postgres*" to the file.]
 
-**How to seed local database**
+# How to seed local database
 
-- Please enter "_psql -f ./db/setup.sql_" to setup the database.
-- Please enter "_node ./db/seeds/run-seed.js_" to seed the database.
+- Please enter `npm run setup-dbs` to set up the database.
+- Please enter `npm run seed` to seed the database.
 
-**How to run tests**
+# How to run tests
 
-- Please enter "_npm tests_" to run all the tests.
+- Please enter `npm tests` to run all the tests.
 
-**Endpoints**
-Please enter the request "_GET /api_" to see a list of all available endpoints.
+# Endpoints
+Please enter the request `GET /api` to see a list of all available endpoints.
 
-**Queries**
-To write a query, add the available query options listed for that request in "_GET /api_",
+# Queries
+To write a query, add the available query options listed for that request in `GET /api`,
 eg. "*/api/articles?topic=cats&sort_by=author&order=desc*" would return a list of articles with the topic cats sorted in descending order of author.
 
 The default sort orders are as follows:

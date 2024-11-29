@@ -1,16 +1,18 @@
 const db = require("../db/connection");
 
-exports.selectCommentsByArticle = (article_id) => {
-  return db
-    .query(
-      `SELECT * FROM comments
-      WHERE comments.article_id = $1
-      ORDER BY created_at DESC;`,
-      [article_id]
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+exports.selectCommentsByArticle = (article_id, limit = 10, p) => {
+  let sqlQuery = `SELECT * FROM comments
+      WHERE comments.article_id = ${article_id}
+      ORDER BY created_at DESC `;
+  if (limit) {
+    sqlQuery += `LIMIT ${limit} `;
+  }
+  if (p) {
+    sqlQuery += `OFFSET (${p}-1) * ${limit} `;
+  }
+  return db.query(sqlQuery).then(({ rows }) => {
+    return rows;
+  });
 };
 
 exports.insertComment = (comment, article_id) => {
@@ -64,5 +66,17 @@ exports.checkCommentExists = (comment_id) => {
           msg: "Not found",
         });
       }
+    });
+};
+
+exports.totalCommentCount = (article_id) => {
+  return db
+    .query(
+      `SELECT * FROM comments
+      WHERE comments.article_id = $1;`,
+      [article_id]
+    )
+    .then(({ rows }) => {
+      return rows.length;
     });
 };

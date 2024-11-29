@@ -4,18 +4,24 @@ const {
   checkCommentExists,
   removeComment,
   changeCommentVotes,
+  totalCommentCount,
 } = require("../models/comments.model");
 const { checkArticleExists } = require("../models/articles.model");
 
 exports.getCommentsByArticle = (req, res, next) => {
   const article_id = req.params.articles_id;
-  const promises = [selectCommentsByArticle(article_id)];
+  const limit = req.query.limit;
+  const p = req.query.p;
+  const promises = [
+    selectCommentsByArticle(article_id, limit, p),
+    totalCommentCount(article_id),
+  ];
   if (article_id) {
     promises.push(checkArticleExists(article_id));
   }
   Promise.all(promises)
-    .then(([comments]) => {
-      return res.status(200).send({ comments });
+    .then(([comments, total_count]) => {
+      return res.status(200).send({ comments, total_count });
     })
     .catch(next);
 };

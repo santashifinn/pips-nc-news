@@ -639,6 +639,59 @@ describe("GET /api/articles - pagination", () => {
   });
 });
 
+describe("GET /api/articles/:article_id/comments - pagination", () => {
+  test("200: Responds with an array of comments for the given article_id paginated according to the user inputs", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=6&p=2")
+      .expect(200)
+      .then(({ body: { comments, total_count } }) => {
+        expect(comments.length).toBe(5);
+        expect(total_count).toBe(11);
+        comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(comment.article_id).toBe(1);
+        });
+      });
+  });
+  test("200: Responds with an array of article objects paginated according to the default of 10 if no user limit input", () => {
+    return request(app)
+      .get("/api/articles/1/comments?p=2")
+      .expect(200)
+      .then(({ body: { comments, total_count } }) => {
+        expect(comments.length).toBe(1);
+        expect(total_count).toBe(11);
+        comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(comment.article_id).toBe(1);
+        });
+      });
+  });
+  test("400: Responds with an error message when given an invalid limit query", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=defyinglimits")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error message when given an invalid page query", () => {
+    return request(app)
+      .get("/api/articles/1/comments?p=ipistrelle")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
 describe("General error tests", () => {
   test("404: Responds with error message when given an invalid endpoint", () => {
     return request(app)

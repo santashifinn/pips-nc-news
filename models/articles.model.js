@@ -128,12 +128,6 @@ exports.checkArticleExists = (article_id) => {
     });
 };
 
-`SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id)::INT AS comment_count, COUNT(article_id)::INT AS total_count
-      FROM articles
-      LEFT JOIN comments
-      ON articles.article_id = comments.article_id `;
-
-
 exports.totalArticleCount = (topic, sort_by = "created_at", order = "DESC") => {
   let sqlQuery = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id)::INT AS comment_count, COUNT(articles.article_id)::INT AS total_count
       FROM articles

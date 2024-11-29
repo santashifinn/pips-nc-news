@@ -243,7 +243,26 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
-  //more error tests on newVote object that is being sent? If an empty object or the wrong data type or missing keys
+  test("400: Responds with an error message when given incomplete required data, ie. an empty object", () => {
+    const newVote = {};
+    return request(app)
+      .patch("/api/articles/2")
+      .send(newVote)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error message when given incorrect data", () => {
+    const newVote = { inc_votes: "bob" };
+    return request(app)
+      .patch("/api/articles/2")
+      .send(newVote)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
 });
 
 describe("DELETE /api/comments/:comment_id", () => {
@@ -285,6 +304,26 @@ describe("GET /api/users", () => {
 });
 
 describe("GET /api/articles?sort_by=:column&order=:order / Responds with an array in specified order of specified column", () => {
+  test("200: Responds with an array of articles when given only a single query (sort_by)", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("votes", {
+          descending: true,
+        });
+      });
+  });
+  test("200: Responds with an array of articles when given only a single query (order)", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", {
+          descending: false,
+        });
+      });
+  });
   test("200: Responds with an ascending array of articles by title", () => {
     return request(app)
       .get("/api/articles?sort_by=title&order=asc")
@@ -399,6 +438,14 @@ describe("GET /api/articles?topic=:topic / Responds with an array of articles fi
         });
       });
   });
+  test("200: Responds with an empty array when filtered by topic query that exists but doesn't have any articles attached to it yet", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(0);
+      });
+  });
   test("404: Responds with an error message when given a valid but non-existent topic query", () => {
     return request(app)
       .get("/api/articles?topic=idontexistatall")
@@ -463,7 +510,26 @@ describe("PATCH /api/comments/:comment_id", () => {
         expect(body.msg).toBe("Bad request");
       });
   });
-  //more error tests on newVote object that is being sent? If an empty object or the wrong data type or missing keys
+  test("400: Responds with an error message when given incomplete required data, ie. an empty object", () => {
+    const newVote = {};
+    return request(app)
+      .patch("/api/comments/2")
+      .send(newVote)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error message when given incorrect data", () => {
+    const newVote = { inc_votes: "chameleon" };
+    return request(app)
+      .patch("/api/comments/2")
+      .send(newVote)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
 });
 
 describe("POST /api/articles", () => {

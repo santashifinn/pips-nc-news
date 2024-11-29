@@ -10,7 +10,7 @@ You can access the hosted version [here](https://pips-nc-news.onrender.com).
 
 ### GitHub repository
 
-You can access the hosted version [here](https://github.com/santashifinn/pips-nc-news).
+You can access the GitHub version [here](https://github.com/santashifinn/pips-nc-news).
 
 # How to clone project
 
@@ -19,27 +19,31 @@ You can access the hosted version [here](https://github.com/santashifinn/pips-nc
 - Install the required dependencies using the commands below.
 - Ensure to add the required files listed below.
 
-# Required dependencies - minimum versions required to run project
+![Image of a Pipistrelle bat panicking over to-do lists](http://pipmurphy.com/nc-news-requirements.png)
+
+## Required dependencies - minimum versions required to run project
 
 - Node.js - 2.2.0 [Please install using the command `npm install`]
 - Postgres - 8.7.3 [Please install using the command `npm install pg`]
 - DotEnv - 16.0.0 [Please install using the command `npm install dotenv`]
 - Express - 4.21.1 [Please install using the command `npm install express`]
 
-# Required files to be added
+## Required files to be added
 
 Please create the following files in order to connect to the **test-data** and **development-data** databases locally:
 
-- .env.test [Please add the text "*PGDATABASE=nc_news_test*" to the file.]
-- .env.development [Please add the text "*PGDATABASE=nc_news*" to the file.]
-- .env.production [Please add the text "*DATABASE_URL=postgresql://postgres.oynyhjsxwofzftyiyfhl:KTSaKOyfDdaQ8oAR@aws-0-eu-west-2.pooler.supabase.com:6543/postgres*" to the file.]
+- .env.test [Please add the text `PGDATABASE=nc_news_test` to the file.]
+- .env.development [Please add the text `PGDATABASE=nc_news` to the file.]
+- .env.production [Please add the text `DATABASE_URL=postgresql://postgres.oynyhjsxwofzftyiyfhl:KTSaKOyfDdaQ8oAR@aws-0-eu-west-2.pooler.supabase.com:6543/postgres` to the file.]
 
-# How to seed local database
+![Image of a Pipistrelle bat dropping seeds](http://pipmurphy.com/nc-news-setupseed.png)
+
+## How to seed local database
 
 - Please enter `npm run setup-dbs` to set up the database.
 - Please enter `npm run seed` to seed the database.
 
-# How to run tests
+## How to run tests
 
 - Please enter `npm tests` to run all the tests.
 

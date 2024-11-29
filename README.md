@@ -34,7 +34,6 @@ Please create the following files in order to connect to the **test-data** and *
 
 - .env.test [Please add the text `PGDATABASE=nc_news_test` to the file.]
 - .env.development [Please add the text `PGDATABASE=nc_news` to the file.]
-- .env.production [Please add the text `DATABASE_URL=postgresql://postgres.oynyhjsxwofzftyiyfhl:KTSaKOyfDdaQ8oAR@aws-0-eu-west-2.pooler.supabase.com:6543/postgres` to the file.]
 
 ![Image of a Pipistrelle bat dropping seeds](http://pipmurphy.com/nc-news-setupseed.png)
 

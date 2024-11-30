@@ -12,7 +12,7 @@
 
 - You can access the hosted version [here](https://pips-nc-news.onrender.com/api).
 - The above link shows a list of possible endpoints and examples of inputs and outputs.
-- If it looks distinctly un-pretty on your browser, you might need to intall an extension to format the JSON file!
+- If it looks distinctly un-pretty on your browser, you might need to install an extension to format the JSON file!
 
 ### GitHub repository
 

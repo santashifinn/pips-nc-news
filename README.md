@@ -28,10 +28,10 @@
 
 ## Required dependencies - minimum versions needed to run project
 
-- **Node.js** - 2.2.0 [Please install using the command `npm install`]
-- **Postgres** - 8.7.3 [Please install using the command `npm install pg`]
-- **DotEnv** - 16.0.0 [Please install using the command `npm install dotenv`]
-- **Express** - 4.21.1 [Please install using the command `npm install express`]
+- **Node.js** - v22.8.0 [Please install using the command `npm install`]
+- **Postgres** - v8.7.3 [Please install using the command `npm install pg`]
+- **DotEnv** - v16.0.0 [Please install using the command `npm install dotenv`]
+- **Express** - v4.21.1 [Please install using the command `npm install express`]
 
 ## Required files
 
